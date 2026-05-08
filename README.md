@@ -29,8 +29,8 @@ This project does that, transparently, from primary sources only:
 | Stage | Status |
 |---|---|
 | 0 — Scaffold + initial events.csv + stakes.csv | ✅ |
-| 1 — EDGAR adapter + footnote extractor + ownership inference | 🚧 |
-| 2 — Event study + look-through EPS + disclosure NLP scorer | ⏳ |
+| 1 — EDGAR adapter + footnote extractor + ownership inference | ✅ |
+| 2 — Event study + look-through EPS + disclosure scorer | ✅ |
 | 3 — Streamlit dashboard + SSRN paper + Zenodo DOI | ⏳ |
 
 ## Quickstart
