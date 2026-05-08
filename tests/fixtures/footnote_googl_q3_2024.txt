@@ -1,0 +1,9 @@
+Note 4 — Financial Instruments
+
+Non-marketable equity securities
+
+Our non-marketable equity securities are investments in privately held companies without readily determinable market values. The carrying value of our non-marketable equity securities is adjusted to fair value upon observable transactions for identical or similar investments of the same issuer or impairment.
+
+As of September 30, 2024, the carrying value of our non-marketable equity securities was $33.7 billion. Non-marketable equity securities cumulative net gain (loss) is comprised of $35.4 billion of gains and $2.5 billion of losses (including impairment) as of the same date.
+
+We use option pricing models, the market comparable approach, and the common stock equivalent method to estimate fair value for non-marketable equity securities. The increase in carrying value during the third quarter of 2024 primarily reflects observable transactions involving our investment in non-marketable equity securities, primarily one investee.

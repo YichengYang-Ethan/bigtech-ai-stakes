@@ -48,6 +48,7 @@ dev = [
     "ruff>=0.5",
     "mypy>=1.10",
     "pre-commit>=3.7",
+    "pandas-stubs>=2.2",
 ]
 analysis = [
     "matplotlib>=3.9",
@@ -111,19 +112,16 @@ no_implicit_optional = true
 check_untyped_defs = true
 
 [[tool.mypy.overrides]]
-module = [
-    "yfinance.*",
-    "fredapi.*",
-    "edgar.*",
-    "edgartools.*",
-    "statsmodels.*",
-]
+module = ["edgar.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 minversion = "8.0"
 testpaths = ["tests"]
-addopts = "-ra --strict-markers --strict-config"
+addopts = "-ra --strict-markers --strict-config -m 'not live'"
+markers = [
+    "live: tests that require live SEC EDGAR network access (run with `pytest -m live`)",
+]
 
 [tool.coverage.run]
 source = ["src/bigtech_ai_stakes"]

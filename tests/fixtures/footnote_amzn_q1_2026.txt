@@ -1,0 +1,11 @@
+Excerpts from Amazon.com, Inc. — Form 8-K Exhibit 99.1, First Quarter 2026 Earnings Release
+
+Non-Operating Income
+
+First quarter 2026 net income includes pre-tax gains of $16.8 billion included in non-operating income from our investments in Anthropic. The gain reflects fair-value adjustments based on observable transactions in the first quarter, including Anthropic's Series G round at a $380 billion post-money valuation announced February 12, 2026.
+
+Our cumulative cost basis in Anthropic is approximately $8 billion, including a $1.25 billion initial investment in September 2023 and additional commitments completed through the first quarter of 2024.
+
+Subsequent Events
+
+In April 2026, we announced an additional commitment of up to $5 billion in Anthropic, bringing our total commitment to up to $25 billion. This additional commitment is subject to certain closing conditions and includes a $100 billion AWS spend agreement over ten years and a 5 GW Trainium deployment.
