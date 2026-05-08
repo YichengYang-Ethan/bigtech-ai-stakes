@@ -1,0 +1,8 @@
+investor_ticker,investor_name,lab,snapshot_date,stake_pct,stake_pct_method,fair_value_billion,cumulative_cost_basis_billion,source_urls,confidence,notes
+MSFT,Microsoft,openai,2026-03-31,26.79,disclosed,228.3,11.8,https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000789019&type=10-Q,V,"As-converted basis post Oct 2025 PBC restructure; equity-method accounting; $13B total commitment of which $11.8B funded as of Q3 FY26."
+GOOGL,Alphabet,anthropic,2025-03-15,14.0,court_filing,,10.0,https://www.nytimes.com/2025/03/27/technology/google-anthropic-investment.html,V,Disclosed via unredacted exhibit in US v. Google antitrust proceeding; figure became public March 2025.
+GOOGL,Alphabet,anthropic,2026-04-30,16.5,inferred_from_FV,63.0,12.5,https://www.anthropic.com/news,P,"Estimate post Series G plus April 2026 +$10B; range 14-17%; pending updated court filing or voluntary disclosure."
+AMZN,Amazon,anthropic,2026-03-31,7.8,inferred_from_FV,70.0,8.0,https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001018724&type=8-K,P,"Derived from cumulative cost basis vs Q1 2026 fair value; AMZN Q1 2026 8-K disclosed $16.8B pre-tax gain from Anthropic investments."
+NVDA,Nvidia,openai,2026-04-30,3.47,leaked_cap_table,29.6,30.0,https://nvidianews.nvidia.com,P,Per leaked cap table circulated March 2026; NVDA 10-Q discloses LOI but not stake percentage.
+NVDA,Nvidia,anthropic,2026-04-30,2.6,inferred_from_FV,9.9,10.0,https://nvidianews.nvidia.com,P,Derived from $10B Nov 2025 commitment consolidated into Series G at $380B post-money.
+CRM,Salesforce,anthropic,2026-05-08,1.0,analyst_estimate,3.8,0.33,https://x.com,S,"Per Benioff X post May 2026 stating ~$330M cumulative at ~1% stake; not yet corroborated in CRM 10-Q."

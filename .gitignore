@@ -1,0 +1,52 @@
+# Python bytecode / caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+
+# Tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Build / dist
+build/
+dist/
+*.whl
+*.tar.gz
+
+# Virtualenvs
+.venv/
+venv/
+env/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+*~
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Local SEC filing cache (not redistributed)
+data/filings/
+*.parquet
+*.feather
+
+# Secrets / local config
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# uv: keep uv.lock committed for reproducibility

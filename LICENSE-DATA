@@ -1,0 +1,30 @@
+Creative Commons Attribution 4.0 International (CC-BY-4.0)
+==========================================================
+
+The data files in this repository — specifically everything under `data/`
+EXCEPT `data/filings/` (which is a local cache of SEC EDGAR filings, not
+redistributed) — are licensed under the Creative Commons Attribution 4.0
+International License.
+
+Full license text: https://creativecommons.org/licenses/by/4.0/legalcode
+Human-readable summary: https://creativecommons.org/licenses/by/4.0/
+
+You may copy, distribute, transform, and build upon the data, including for
+commercial purposes, provided you give appropriate credit. Suggested
+attribution:
+
+    Data from `bigtech-ai-stakes` by Yicheng Yang (2026),
+    https://github.com/YichengYang-Ethan/bigtech-ai-stakes,
+    licensed under CC-BY-4.0.
+
+Source materials underlying the data — SEC EDGAR filings, U.S. federal court
+records, and company press releases — are public domain or factual
+non-copyrightable disclosures. The contributions licensed here are the
+selection, structure, normalization, source attribution, and confidence
+tagging of the curated CSV datasets.
+
+Cached SEC filings under `data/filings/` are NOT redistributed (they remain
+freely available directly from SEC EDGAR at https://www.sec.gov/edgar.shtml).
+
+THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. This is research
+output, not investment advice.
