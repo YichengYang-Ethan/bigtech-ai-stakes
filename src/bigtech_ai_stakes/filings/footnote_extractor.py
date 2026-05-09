@@ -7,9 +7,26 @@ for ambiguous footnotes is planned for v0.2 (see docs/methodology.md).
 from __future__ import annotations
 
 import re
+from collections.abc import Sequence
 from typing import Final
 
 from pydantic import BaseModel, Field
+
+# Phrases that mark the start of an ASC 321 / 323 footnote in a 10-K / 10-Q.
+# Order matters: more financial-statement-specific phrases first so we land in
+# the right section if the issuer mentions the lab in multiple places.
+DEFAULT_ANCHOR_PHRASES: Final[list[str]] = [
+    "non-marketable equity securities",
+    "investment of approximately",  # MSFT post Oct 2025 restructure
+    "as-converted basis",  # MSFT equity-method language
+    "from our investments in Anthropic",  # AMZN earnings-release prefix
+    "from investments in OpenAI",  # MSFT gains/losses footnote
+    "investments in Anthropic",
+    "investment in Anthropic",
+    "investment in OpenAI",
+    "OpenAI Global",
+    "OpenAI Group",
+]
 
 # Investee names we look for explicitly. Order matters for greedy matching:
 # longer / more specific first, so "OpenAI Group PBC" is preferred over "OpenAI".
@@ -138,18 +155,44 @@ def extract_funded_to_date(text: str) -> float | None:
 
 
 def extract_pretax_gain_quarter(text: str) -> float | None:
-    """Find 'pre-tax gains of $16.8 billion ... from our investments in <lab>'."""
-    pat = rf"pre[-\s]?tax gains?\s+of\s+{_DOLLAR_AMT}"
-    return _first_match_to_billion(pat, text)
+    """Find quarterly gain disclosures.
+
+    Matches multiple phrasings:
+      - 'pre-tax gains of $16.8 billion ... from our investments in Anthropic' (AMZN)
+      - '$5.9 billion of net gains ... from investments in OpenAI'             (MSFT)
+    """
+    patterns = [
+        rf"pre[-\s]?tax gains?\s+of\s+{_DOLLAR_AMT}",
+        rf"{_DOLLAR_AMT}\s+of\s+net\s+gains?",
+        rf"net\s+gains?\s+of\s+{_DOLLAR_AMT}",
+    ]
+    for pat in patterns:
+        n = _first_match_to_billion(pat, text)
+        if n is not None:
+            return n
+    return None
 
 
 def extract_stake_pct(text: str) -> float | None:
-    """Find 'as-converted ownership interest is approximately 26.79%'."""
-    pat = r"(?:ownership interest|stake)[^.]{0,80}?(?:is|of)\s+approximately\s+([\d.]+)\s*%"
-    m = re.search(pat, text, flags=re.IGNORECASE | re.DOTALL)
-    if not m:
-        return None
-    return float(m.group(1))
+    """Find phrases describing an ownership percentage.
+
+    Handles multiple phrasings:
+      - 'as-converted ownership interest is approximately 26.79%'  (fixture-style)
+      - 'investment of approximately27 percent of OpenAI'           (MSFT Apr 2026 10-Q)
+      - 'stake of approximately 14.0 percent'                       (court filing style)
+    """
+    patterns = [
+        r"(?:ownership interest|stake|investment)"
+        r"[^.]{0,80}?"
+        r"approximately\s*([\d.]+)\s*(?:%|percent)",
+        # Fallback: "approximately X% of <Lab>"
+        r"approximately\s*([\d.]+)\s*(?:%|percent)\s+of\s+(?:OpenAI|Anthropic)",
+    ]
+    for pat in patterns:
+        m = re.search(pat, text, flags=re.IGNORECASE | re.DOTALL)
+        if m:
+            return float(m.group(1))
+    return None
 
 
 def extract_valuation_methods(text: str) -> list[str]:
@@ -159,6 +202,43 @@ def extract_valuation_methods(text: str) -> list[str]:
         if re.search(pat, text, flags=re.IGNORECASE) and label not in found:
             found.append(label)
     return found
+
+
+def find_relevant_section(
+    text: str,
+    anchors: Sequence[str] | None = None,
+    *,
+    window_before: int = 500,
+    window_after: int = 2500,
+    max_chars: int = 12000,
+) -> str:
+    """Return a window of text covering all matching anchor phrases.
+
+    A 10-K / 10-Q is too large for direct regex; this isolates the ASC 321 /
+    323 disclosure region. When multiple anchor phrases match the same filing
+    (typical: stake percentage paragraph + gains/losses paragraph + commitment
+    paragraph), we span from the earliest match to the latest, padded by
+    ``window_before`` / ``window_after``. ``max_chars`` caps the output.
+
+    Returns an empty string if no anchor phrase is found.
+    """
+    if anchors is None:
+        anchors = DEFAULT_ANCHOR_PHRASES
+    text_lower = text.lower()
+    positions: list[int] = []
+    for phrase in anchors:
+        idx = text_lower.find(phrase.lower())
+        if idx >= 0:
+            positions.append(idx)
+    if not positions:
+        return ""
+    earliest = min(positions)
+    latest = max(positions)
+    start = max(0, earliest - window_before)
+    end = min(len(text), latest + window_after)
+    if end - start > max_chars:
+        end = start + max_chars
+    return text[start:end]
 
 
 def extract_all(text: str, *, excerpt_chars: int = 500) -> FootnoteExtraction:

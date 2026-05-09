@@ -21,6 +21,38 @@ Primary funding rounds, tenders, convertible notes, and structural events for An
 | `confidence` | str | `V` / `P` / `S`. |
 | `notes` | str | Free text. |
 
+## `stakes_extracted.csv` (auto-generated)
+
+Machine-extracted disclosure data, one row per SEC filing. Produced by
+`scripts/run_live_extraction.py` (live SEC fetch + regex footnote extractor).
+Distinct from the curated `stakes/stakes.csv`: every row here corresponds to
+a real 10-K / 10-Q / 8-K, with `accession` linkable on EDGAR. All rows are
+implicitly confidence `V` (sourced from primary filings).
+
+| Column | Type | Description |
+|---|---|---|
+| `ticker` | str | Issuer ticker. |
+| `form` | str | `10-K`, `10-Q`, etc. |
+| `filing_date` | date | When the form was filed. |
+| `accession` | str | SEC accession number; URL = `https://www.sec.gov/Archives/edgar/data/<CIK>/<accession-no-dashes>/<accession>-index.htm`. |
+| `anchor_hit` | bool | Whether any of the AI-stake anchor phrases matched. |
+| `section_chars` | int | Length of the isolated footnote section (0 if no anchor hit). |
+| `investees` | str | Pipe-separated names found (e.g., `OpenAI`, `Anthropic`). |
+| `carrying_value_billion` | float? | Carrying value of non-marketable equity securities (USD bn). |
+| `cumulative_gains_billion` | float? | Cumulative upward fair-value adjustments (USD bn). |
+| `cumulative_losses_billion` | float? | Cumulative downward adjustments (USD bn). |
+| `funding_commitment_billion` | float? | Total committed funding (e.g., MSFT `$13B`). |
+| `funded_to_date_billion` | float? | How much of that has been funded. |
+| `pretax_gain_quarter_billion` | float? | Quarterly / 9-month / annual gain disclosure. |
+| `stake_pct` | float? | Disclosed ownership percentage (e.g., MSFT `27.0%`). |
+| `valuation_methods` | str | Pipe-separated list (`option_pricing`, `market_comparable`, `common_stock_equivalent`, `equity_method`). |
+
+To regenerate:
+
+```bash
+uv run python scripts/run_live_extraction.py --tickers GOOGL,AMZN,MSFT,NVDA --since 2023-01-01
+```
+
 ## `stakes/stakes.csv`
 
 Point-in-time ownership snapshots per (investor, lab, date).
