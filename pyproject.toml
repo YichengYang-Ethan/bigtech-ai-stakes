@@ -113,7 +113,7 @@ no_implicit_optional = true
 check_untyped_defs = true
 
 [[tool.mypy.overrides]]
-module = ["edgar.*", "statsmodels.*"]
+module = ["edgar.*", "statsmodels.*", "yfinance.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

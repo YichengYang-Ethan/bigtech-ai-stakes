@@ -33,7 +33,22 @@ This project does that, transparently, from primary sources only:
 | 2 — Event study + look-through EPS + disclosure scorer | ✅ |
 | 2 v0.2 — Live SEC extraction (55 filings, 22 with extracted data) | ✅ |
 | 3.1 — Streamlit dashboard | ✅ |
-| 3.2 — Auto-quarterly note + SSRN paper template + Zenodo DOI | ⏳ |
+| 3.2 — Cross-wrapper arbitrage backtest | ✅ |
+| 3.3 — Live monitor + Telegram alerts (optional) | ⏳ |
+| 3.4 — Portfolio polish (screenshots, demo, deploy badge) | ⏳ |
+
+## Headline backtest result
+
+> **Long Big Tech wrappers (GOOGL / AMZN / NVDA) on Anthropic primary-round
+> announcements, hold 10 trading days, exit. Sharpe 2.27, win rate 66.7%,
+> mean +3.4% abnormal vs SPY** (N = 12 trades across Series C / E / F / G).
+> Cross-wrapper pairs-trade variant (long underreactor / short overreactor)
+> empirically *fails*: Sharpe -1.04 to -1.58 across every tested holding
+> period. The simpler long-only captures the markup channel; the more
+> sophisticated version overcomplicates and loses money.
+
+See [`docs/backtest_findings.md`](docs/backtest_findings.md) for full results
+and `data/backtest_results.csv` for per-trade detail.
 
 ## Quickstart
 

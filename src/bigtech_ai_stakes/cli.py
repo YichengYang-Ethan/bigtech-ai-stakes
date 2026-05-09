@@ -46,10 +46,16 @@ disclosure_app = typer.Typer(
     help="ASC 321 / 323 disclosure-quality 7-criterion scoring.",
     no_args_is_help=True,
 )
+backtest_app = typer.Typer(
+    name="backtest",
+    help="Cross-wrapper arbitrage backtest (event drift + pairs strategies).",
+    no_args_is_help=True,
+)
 app.add_typer(filings_app)
 app.add_typer(inference_app)
 app.add_typer(lookthrough_app)
 app.add_typer(disclosure_app)
+app.add_typer(backtest_app)
 console = Console()
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -274,6 +280,98 @@ def disclosure_compare_fixtures() -> None:
     for _, row in df.iterrows():
         table.add_row(*[str(row[c]) for c in df.columns])
     console.print(table)
+
+
+@backtest_app.command("run")
+def backtest_run(
+    holding_days: int = typer.Option(30, help="Trading days to hold post-event."),
+    lab: str = typer.Option("anthropic", help="Filter events by lab: anthropic / openai / all."),
+    output: Path = typer.Option(  # noqa: B008
+        Path("data/backtest_results.csv"), help="Output CSV with per-trade rows."
+    ),
+    strategies: str = typer.Option(
+        "both",
+        help="Which strategies to run: 'long', 'pairs', or 'both'.",
+    ),
+    refresh: bool = typer.Option(
+        False, "--refresh", help="Force a fresh yfinance fetch (skip cache)."
+    ),
+) -> None:
+    """Run cross-wrapper arbitrage backtest against live yfinance data."""
+    from datetime import timedelta
+
+    from bigtech_ai_stakes.backtest.core import (
+        run_cross_wrapper_strategy,
+        run_event_drift_strategy,
+    )
+    from bigtech_ai_stakes.backtest.prices import load_returns
+
+    df_events = load_events()
+    if lab.lower() != "all":
+        df_events = df_events[df_events["lab"].str.lower() == lab.lower()]
+    if df_events.empty:
+        console.print("[red]no events selected[/red]")
+        raise typer.Exit(1)
+
+    earliest = df_events["announcement_date"].min().date() - timedelta(days=400)
+    latest = df_events["announcement_date"].max().date() + timedelta(days=holding_days + 10)
+
+    tickers = ["GOOGL", "AMZN", "MSFT", "NVDA", "SPY"]
+    console.print(f"[bold]Loading returns[/bold] for {tickers} from {earliest} to {latest} ...")
+    panel = load_returns(tickers, earliest, latest, force_refresh=refresh)
+    console.print(f"  loaded {len(panel)} trading days")
+
+    summaries: list = []
+    if strategies in ("long", "both"):
+        s_long = run_event_drift_strategy(df_events, panel, holding_window=(1, holding_days))
+        summaries.append(s_long)
+    if strategies in ("pairs", "both"):
+        s_pair = run_cross_wrapper_strategy(df_events, panel, holding_window=(1, holding_days))
+        summaries.append(s_pair)
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    rows: list[dict[str, object]] = []
+    for summary in summaries:
+        for t in summary.trades:
+            rows.append(
+                {
+                    "strategy": summary.strategy,
+                    "event_id": t.event_id,
+                    "event_date": t.event_date,
+                    "lab": t.lab,
+                    "wrapper": t.wrapper,
+                    "direction": t.direction,
+                    "stake_pct": t.stake_pct,
+                    "market_cap_billion": t.market_cap_billion,
+                    "expected_return_announce": t.expected_return_announce,
+                    "actual_return_announce": t.actual_return_announce,
+                    "holding_period_return": t.holding_period_return,
+                    "benchmark_return": t.benchmark_return,
+                    "abnormal_return": t.abnormal_return,
+                    "notes": t.notes,
+                }
+            )
+    if rows:
+        import pandas as pd
+
+        pd.DataFrame(rows).to_csv(output, index=False)
+        console.print(f"[green]wrote {len(rows)} trade rows to {output}[/green]")
+
+    for summary in summaries:
+        table = Table(title=f"Backtest summary - {summary.strategy} (holding {holding_days}d)")
+        for col in (
+            "metric",
+            "value",
+        ):
+            table.add_column(col)
+        table.add_row("n_trades", str(int(summary.n_trades)))
+        table.add_row("mean_abnormal_return", f"{summary.mean_abnormal_return:.4f}")
+        table.add_row("median_abnormal_return", f"{summary.median_abnormal_return:.4f}")
+        table.add_row("win_rate", f"{summary.win_rate:.2%}")
+        table.add_row("sharpe_annualized", f"{summary.sharpe_annualized:.2f}")
+        table.add_row("max_drawdown", f"{summary.max_drawdown:.2%}")
+        table.add_row("total_pnl", f"{summary.total_pnl:.2%}")
+        console.print(table)
 
 
 @app.command()
