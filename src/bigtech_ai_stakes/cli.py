@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from datetime import date
 from pathlib import Path
 
@@ -273,6 +274,35 @@ def disclosure_compare_fixtures() -> None:
     for _, row in df.iterrows():
         table.add_row(*[str(row[c]) for c in df.columns])
     console.print(table)
+
+
+@app.command()
+def dashboard(
+    print_only: bool = typer.Option(
+        False, "--print-only", help="Print the launch command without exec'ing it."
+    ),
+) -> None:
+    """Launch the Streamlit dashboard."""
+    repo_root = Path(__file__).resolve().parents[2]
+    app_path = repo_root / "streamlit_app.py"
+    if not app_path.exists():
+        raise typer.BadParameter(f"streamlit_app.py not found at {app_path}")
+    args = [
+        "uv",
+        "run",
+        "--extra",
+        "dashboard",
+        "--extra",
+        "analysis",
+        "streamlit",
+        "run",
+        str(app_path),
+    ]
+    if print_only:
+        console.print("Run: [bold]" + " ".join(args) + "[/bold]")
+        return
+    console.print(f"Launching Streamlit dashboard from {app_path} ...")
+    os.execvp(args[0], args)
 
 
 if __name__ == "__main__":

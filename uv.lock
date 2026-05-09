@@ -241,6 +241,7 @@ analysis = [
     { name = "scikit-learn" },
 ]
 dashboard = [
+    { name = "plotly" },
     { name = "streamlit" },
 ]
 dev = [
@@ -263,6 +264,7 @@ requires-dist = [
     { name = "pandas", specifier = ">=2.2" },
     { name = "pandas-stubs", marker = "extra == 'dev'", specifier = ">=2.2" },
     { name = "plotly", marker = "extra == 'analysis'", specifier = ">=5.22" },
+    { name = "plotly", marker = "extra == 'dashboard'", specifier = ">=5.22" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.7" },
     { name = "pydantic", specifier = ">=2.7" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.2" },

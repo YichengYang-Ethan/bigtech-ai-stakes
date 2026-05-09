@@ -31,7 +31,9 @@ This project does that, transparently, from primary sources only:
 | 0 — Scaffold + initial events.csv + stakes.csv | ✅ |
 | 1 — EDGAR adapter + footnote extractor + ownership inference | ✅ |
 | 2 — Event study + look-through EPS + disclosure scorer | ✅ |
-| 3 — Streamlit dashboard + SSRN paper + Zenodo DOI | ⏳ |
+| 2 v0.2 — Live SEC extraction (55 filings, 22 with extracted data) | ✅ |
+| 3.1 — Streamlit dashboard | ✅ |
+| 3.2 — Auto-quarterly note + SSRN paper template + Zenodo DOI | ⏳ |
 
 ## Quickstart
 
@@ -46,6 +48,22 @@ uv run bigtech-ai-stakes stakes --investor MSFT
 ```
 
 Requires Python 3.14+. Uses [uv](https://docs.astral.sh/uv/) for dependency management.
+
+### Live SEC extraction
+
+```bash
+uv run python scripts/run_live_extraction.py \
+    --tickers GOOGL,AMZN,MSFT,NVDA --since 2023-01-01
+# writes data/stakes_extracted.csv
+```
+
+### Streamlit dashboard
+
+```bash
+uv run bigtech-ai-stakes dashboard
+# or directly:
+uv run --extra dashboard --extra analysis streamlit run streamlit_app.py
+```
 
 ## Data
 
