@@ -1,8 +1,29 @@
 # bigtech-ai-stakes
 
-Open-source quarterly panel and analytics for U.S. public-company equity stakes in **Anthropic** and **OpenAI**, derived from primary SEC filings (10-K / 10-Q / 8-K), public press releases, and court records.
+Open-source tracker for U.S. public-company equity stakes in **Anthropic** and **OpenAI**, derived from primary SEC filings (10-K / 10-Q / 8-K), public press releases, and court records.
 
-> **Status:** v0.1 scaffold (May 2026) — actively developed.
+> **Status:** v0.1 (May 2026) — actively developed.
+
+## Headline: who owns what (2026-05-08)
+
+| Issuer | Lab | Stake % | Source | Confidence |
+|---|---|---:|---|:-:|
+| **Microsoft** | OpenAI | **27.0%** | MSFT 10-Q (Apr 2026) | ✅ V |
+| **Alphabet** | Anthropic | **~14%** (Mar 2025) → **~12–17%** today | Court filing + dilution math | 🟡 V → P |
+| **Amazon** | Anthropic | **~7–8%** | Inferred from cost basis vs fair value | 🟡 P |
+| **NVIDIA** | OpenAI | **~3.47%** | Leaked cap table (Mar 2026) | 🟡 P |
+| **NVIDIA** | Anthropic | **~2.6%** | Inferred from Nov 2025 $10B commitment | 🟡 P |
+| **Salesforce** | Anthropic | **~1%** | Benioff X post | 🔴 S |
+
+**Only the MSFT figure is directly disclosed by the issuer in a SEC filing.**
+Alphabet's 14% came from a March 2025 court filing and is now stale (Anthropic
+has had two rounds since). Amazon and NVIDIA do not disclose their stake
+percentages at all — those are inferred from disclosed cost basis vs. fair
+value, or sourced from leaked / secondary documents.
+
+Full source links and confidence rationale: [`data/ownership_summary.md`](data/ownership_summary.md).
+Per-filing extraction: [`data/stakes_extracted.csv`](data/stakes_extracted.csv).
+Curated snapshot: [`data/stakes/stakes.csv`](data/stakes/stakes.csv).
 
 ## Why this exists
 
