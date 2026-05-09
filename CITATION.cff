@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+title: "bigtech-ai-stakes: a tracker for U.S. public-company equity stakes in Anthropic and OpenAI"
+message: "If you use this dataset, please cite it as below."
+type: dataset
+authors:
+  - family-names: Yang
+    given-names: Yicheng
+    name-particle: ""
+    alias: YichengYang-Ethan
+    email: yy85@illinois.edu
+    affiliation: "University of Illinois Urbana-Champaign"
+    orcid: ""
+abstract: >-
+  An open dataset of U.S. public-company equity stakes in Anthropic and OpenAI,
+  collected from primary SEC filings (10-K / 10-Q / 8-K), public press releases,
+  and court records. Each row is tagged with a confidence flag (V verified,
+  P probable, S speculative). Includes a curated point-in-time snapshot,
+  a machine-extracted panel from real SEC filings, and a catalog of primary
+  funding rounds and Big Tech follow-on commitments.
+keywords:
+  - dataset
+  - sec-edgar
+  - anthropic
+  - openai
+  - corporate-disclosure
+  - public-companies
+  - asc-321
+  - private-equity
+license: CC-BY-4.0
+license-url: "https://creativecommons.org/licenses/by/4.0/"
+repository-code: "https://github.com/YichengYang-Ethan/bigtech-ai-stakes"
+url: "https://github.com/YichengYang-Ethan/bigtech-ai-stakes"
+version: "0.1.0"
+date-released: "2026-05-08"
